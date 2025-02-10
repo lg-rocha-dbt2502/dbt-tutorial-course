@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__products
+    description: "Ecommerce Products List"
+    columns:
+      - name: product_id
+        description: "Product Unique Identifier"
+        tests:
+          - not_null
+          - unique
+
+      - name: cost
+        description: "Product Cost"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+      - name: category
+        description: "Product Category Description"
+        tests:
+          - not_null
+
+      - name: name
+        description: "Product Name"
+
+      - name: brand
+        description: "Product Brand"
+
+      - name: retail_price
+        description: "Produt Retail Price"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= cost"
+
+      - name: department
+        description: "Product Department Name"
+        tests:
+          - not_null
+
+      - name: sku
+        description: "Stock-Keeping Unit (Individual Product Idenfier)"
+        tests:
+          - not_null
+
+      - name: distribution_center_id
+        description: "Distribution Unique Identifier"
+        tests:
+          - not_null
+          # - relationships:
+          #     to: ref('stg_ecommerce__products')
+          #     field: product_id
